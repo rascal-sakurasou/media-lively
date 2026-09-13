@@ -1,0 +1,32 @@
+-- メディアライブリー用の確認・補助SQL
+-- 既存DBを壊さないため、既存テーブルの定義変更は自動で行いません。
+--
+-- 重要:
+-- 管理者権限を「ログインしているだけ」で判定しないでください。
+-- anime / recommended_anime / advertisements のINSERT・UPDATE・DELETEは
+-- Supabase Dashboard側で管理者だけに許可するRLSポリシーを設定してください。
+--
+-- 以下は、既存テーブルに必要な列の想定です。
+--
+-- anime:
+-- id, title, english_title, genre, description, review, official_url
+--
+-- recommended_anime:
+-- id, anime_id, start_date, end_date, start_time, end_time,
+-- display_order, is_active, created_at, updated_at
+--
+-- anime_likes:
+-- id, anime_id, visitor_id
+--
+-- anime_comments:
+-- id, anime_id, nickname, comment, created_at, visitor_id
+--
+-- advertisements:
+-- id, company_name, title, description, image_url, link_url, is_active
+--
+-- 推奨:
+-- 1. 公開読取: 必要なテーブルだけSELECTを許可
+-- 2. いいね: visitor_idを用いた本人行のINSERT/DELETEをRLSで制限
+-- 3. コメント: INSERTを許可し、DELETEは本人のvisitor_idに限定
+-- 4. 管理操作: Supabase Authの管理者ロール等で制限
+-- 5. Storage: 広告画像の公開読取と、管理者のみのアップロード/削除を分離
