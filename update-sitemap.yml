@@ -1,0 +1,108 @@
+name: Update Sitemap
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Generate sitemap.xml
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SITE_URL: https://rascal-sakurasou.github.io/media-lively
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import urllib.request
+          import urllib.parse
+          from xml.sax.saxutils import escape
+
+          supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+          supabase_key = os.environ["SUPABASE_KEY"]
+          site_url = os.environ["SITE_URL"].rstrip("/")
+
+          api_url = (
+              supabase_url
+              + "/rest/v1/anime"
+              + "?select=id"
+              + "&order=id.asc"
+          )
+
+          request = urllib.request.Request(
+              api_url,
+              headers={
+                  "apikey": supabase_key,
+                  "Authorization": f"Bearer {supabase_key}"
+              }
+          )
+
+          with urllib.request.urlopen(request) as response:
+              data = json.load(response)
+
+          urls = [
+              site_url + "/",
+              site_url + "/anime.html",
+              site_url + "/ranking.html",
+              site_url + "/genre.html",
+              site_url + "/terms.html",
+              site_url + "/privacy.html"
+          ]
+
+          for anime in data:
+              anime_id = anime.get("id")
+              if anime_id is None:
+                  continue
+              urls.append(
+                  site_url
+                  + "/anime-detail.html?id="
+                  + urllib.parse.quote(str(anime_id), safe="")
+              )
+
+          xml = [
+              '<?xml version="1.0" encoding="UTF-8"?>',
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+          ]
+
+          for url in urls:
+              xml.extend([
+                  "  <url>",
+                  f"    <loc>{escape(url)}</loc>",
+                  "  </url>"
+              ])
+
+          xml.append("</urlset>")
+
+          with open("sitemap.xml", "w", encoding="utf-8") as file:
+              file.write("\n".join(xml) + "\n")
+
+          print(f"Generated sitemap with {len(urls)} URLs.")
+          PY
+
+      - name: Commit sitemap if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add sitemap.xml
+
+          if git diff --cached --quiet; then
+            echo "No changes to sitemap.xml"
+          else
+            git commit -m "Update sitemap"
+            git push
+          fi
