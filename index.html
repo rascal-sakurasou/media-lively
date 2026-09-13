@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>メディアライブリー｜アニメを探す、記録する、語る。</title>
+<meta name="description" content="メディアライブリーは、アニメ作品の情報、検索、ランキング、レビュー、視聴管理をまとめて利用できるアニメデータベースです。">
+<link rel="canonical" href="https://rascal-sakurasou.github.io/media-lively/">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+<a class="logo" href="index.html">メディア<span>ライブリー</span></a>
+<nav class="main-nav" aria-label="メインナビゲーション">
+<a href="anime.html">作品</a><a href="seasonal.html">今期</a><a href="ranking.html">ランキング</a><a href="reviews.html">レビュー</a><a href="search.html">検索</a><a href="mylist.html">マイリスト</a>
+</nav><a class="header-login" href="login.html">ログイン</a>
+</div></header>
+<main>
+<section class="hero hero-large"><div class="hero-inner">
+<p class="eyebrow">ANIME DATABASE / REVIEWS / COMMUNITY</p>
+<h1>アニメを探す。<br><span>もっと深く。</span></h1>
+<p class="hero-copy">作品情報からランキング、レビュー、視聴記録まで。<br>次に観たい一作を見つけるためのアニメデータベース。</p>
+<form class="hero-search" action="search.html"><input name="q" autocomplete="off" placeholder="作品名・英語タイトル・ジャンルを検索" aria-label="アニメ検索"><button type="submit">検索</button></form>
+<div class="hero-links"><a href="seasonal.html">今期アニメを見る →</a><a href="ranking.html">ランキングを見る →</a><a href="anime.html">作品一覧を見る →</a></div>
+</div></section>
+<section class="section"><div class="section-heading"><div><p class="section-label">DISCOVER</p><h2>注目の作品</h2></div><a class="more-link" href="anime.html">作品一覧 →</a></div><div id="featured-list" class="poster-grid"><div class="status">読み込み中……</div></div></section>
+<section class="section section-alt"><div class="section-heading"><div><p class="section-label">RANKING</p><h2>人気ランキング</h2></div><a class="more-link" href="ranking.html">ランキング →</a></div><div id="home-ranking" class="ranking-list"><div class="status">読み込み中……</div></div></section>
+<section class="section"><div class="section-heading"><div><p class="section-label">REVIEWS</p><h2>話題のレビュー</h2></div><a class="more-link" href="reviews.html">レビュー一覧 →</a></div><div id="home-reviews" class="review-grid"><div class="status">読み込み中……</div></div></section>
+<section class="section section-alt"><div class="section-heading"><div><p class="section-label">GENRE</p><h2>ジャンルから探す</h2></div><a class="more-link" href="genre.html">すべて見る →</a></div><div id="genre-grid" class="genre-grid"></div></section>
+</main>
+<footer class="footer"><div class="footer-inner"><h2 class="footer-title">メディアライブリー</h2><p class="footer-description">アニメを探す、記録する、語る。</p><nav class="footer-links"><a href="anime.html">作品一覧</a><a href="search.html">検索</a><a href="ranking.html">ランキング</a><a href="seasonal.html">今期</a><a href="reviews.html">レビュー</a><a href="terms.html">利用規約</a><a href="privacy.html">プライバシーポリシー</a></nav></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/common.js"></script><script src="assets/js/home.js"></script>
+</body></html>

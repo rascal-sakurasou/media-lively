@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>アニメを探す | メディアライブリー</title>
+<meta name="description" content="メディアライブリーでアニメを条件から探す。年代、クール、形式、放送状況、ジャンルなどから作品を絞り込めます。">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="header-inner"><a class="logo" href="index.html">メディアライブリー</a><nav class="navigation"><a href="anime.html">アニメ</a><a href="seasonal.html">今期</a><a href="ranking.html">ランキング</a><a href="reviews.html">レビュー</a><a href="mylist.html">マイリスト</a></nav></div></header>
+<main class="section page-header"><span class="section-label">DISCOVER</span><h1>アニメを探す</h1><p>条件を組み合わせて作品を見つけられます。</p></main>
+<section class="section"><div class="search-panel">
+<label>キーワード<input id="keyword" type="search" placeholder="作品名・英語名・説明など"></label>
+<label>年<input id="year" type="number" min="1900" max="2100" placeholder="2026"></label>
+<label>クール<select id="season"><option value="">すべて</option><option value="winter">冬</option><option value="spring">春</option><option value="summer">夏</option><option value="fall">秋</option></select></label>
+<label>形式<select id="type"><option value="">すべて</option><option value="TV">TV</option><option value="Movie">映画</option><option value="ONA">Web</option><option value="OVA">OVA</option><option value="Special">特別編</option></select></label>
+<button id="searchButton" class="button" type="button">検索</button>
+</div><div id="resultMeta" class="status"></div><div id="results" class="anime-grid"></div></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script><script src="assets/js/common.js"></script>
+<script>
+const client=window.mediaLivelySupabase;
+const esc=window.MediaLively.escapeHTML;
+function card(a){return `<article class="anime-card"><div class="anime-card-content"><span class="anime-genre">${esc(a.season_year||'')}${a.season?' '+esc(a.season):''}</span><h3>${esc(a.title||'無題')}</h3><p>${esc(a.title_en||'')}</p><p>${esc((a.description||'').slice(0,120))}</p><a class="more-link" href="anime-detail.html?id=${encodeURIComponent(a.id)}">作品詳細 →</a></div></article>`}
+async function search(){const q=document.getElementById('keyword').value.trim();const year=document.getElementById('year').value;const season=document.getElementById('season').value;const type=document.getElementById('type').value;let query=client.from('anime_discovery').select('*').order('bayesian_score',{ascending:false}).limit(100);if(year)query=query.eq('season_year',Number(year));if(season)query=query.eq('season',season);if(type)query=query.eq('type',type);if(q)query=query.or(`title.ilike.%${q.replace(/[,()]/g,'')}%,title_en.ilike.%${q.replace(/[,()]/g,'')}%,description.ilike.%${q.replace(/[,()]/g,'')}%`);const {data,error}=await query;const meta=document.getElementById('resultMeta'),box=document.getElementById('results');if(error){meta.textContent='検索に失敗しました。';box.innerHTML='';return}meta.textContent=`検索結果 ${data.length}件`;box.innerHTML=data.map(card).join('')||'<p>該当する作品がありません。</p>'}
+document.getElementById('searchButton').addEventListener('click',search);document.getElementById('keyword').addEventListener('keydown',e=>{if(e.key==='Enter')search()});search();
+</script>
+</body></html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rascal-sakurasou.github.io/media-lively/sitemap.xml
